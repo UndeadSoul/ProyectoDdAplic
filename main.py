@@ -1,19 +1,27 @@
-from .functions.jefedeventas import *
-from .functions.vendedor import *
-from .functions.connectMySql import *
+#imports
 from os import system
+from functions.connectMySql import *
+from functions.vendedor import *
+from functions.jefedeventas import *
 
+#main menu
 while True:
     system("cls")
     user=input("Ingrese Usuario: ")
     password=input("ingrese Contraseña: ")
     typeOfUser=credentials(user,password)
+    system("cls")
     match typeOfUser.lower():
         case "vendedor":
-            sellerMenu()
+            input(f"Bienvenido Vendedor {user} \
+                  \npresione Enter para ingresar al menu")
+            sellerMenu(user)
         case "jefedeventas":
-            salesManagerMenu()
+            input(f"Bienvenido Jefe de ventas {user} \
+                  \npresione Enter para ingresar al menu...")
+            salesManagerMenu(user)
         case _:
+            system("cls")
             input("Las credenciales entregadas no coinciden con ninguna en nuestra base de datos.\
                   \nPresione Enter para intentar nuevamente")
-    
+    #this should be the main menu where the program starts and goes to the specific menus
