@@ -15,7 +15,6 @@ class Database():
         self.cursor.close()
         self.conexion.close()
 
-
 def credentials(user,password,db):
     
     tipousuario="algo"
