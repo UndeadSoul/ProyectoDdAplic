@@ -1,7 +1,7 @@
 from os import system
 from functions.connectMySql import *
 
-def salesManagerMenu(user):
+def salesManagerMenu(user,db):
     system("cls")
     print("salesManMenu")
 ###########

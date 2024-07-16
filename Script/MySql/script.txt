@@ -1,0 +1,73 @@
+create database nona;
+use nona;
+
+CREATE TABLE vendedor (
+    rutVendedor VARCHAR(15) NOT NULL PRIMARY KEY,
+    userName VARCHAR(20),
+    password1 VARCHAR(20),
+    nombre VARCHAR(20),
+    apellidoPat VARCHAR(20),
+    fono INT
+)  engine=innodb;
+
+CREATE TABLE factura (
+    numFactura INT NOT NULL PRIMARY KEY,
+    razSocCli VARCHAR(20),
+    rutCli VARCHAR(15),
+    giro VARCHAR(20),
+    direccion VARCHAR(20),
+    totalNeto INT
+)engine=innodb;
+
+CREATE TABLE boleta (
+    numBoleta INT NOT NULL PRIMARY KEY,
+    totalNeto INT
+)engine=innodb;
+
+CREATE TABLE registroDeVenta (
+    codVenta VARCHAR(10) NOT NULL PRIMARY KEY,
+    fecha DATE,
+    tipoDoc VARCHAR(10),
+    numFactura INT NOT NULL,
+    numBoleta INT NOT NULL,
+    rutVendedor VARCHAR(15) NOT NULL,
+    FOREIGN KEY (numFactura) REFERENCES factura(numFactura),
+    FOREIGN KEY (numBoleta) REFERENCES boleta(numBoleta),
+    FOREIGN KEY (rutVendedor) REFERENCES vendedor(rutVendedor)
+)engine=innodb;
+
+CREATE TABLE jefeDeVentas (
+    rutJefe VARCHAR(15) NOT NULL PRIMARY KEY,
+    userName VARCHAR(20),
+    password1 VARCHAR(20),
+    nombre VARCHAR(20),
+    apellidoPat VARCHAR(20),
+    fono INT
+)engine=innodb;
+
+CREATE TABLE producto (
+    codProd INT NOT NULL PRIMARY KEY,
+    nombreProd VARCHAR(20),
+    valorUnit INT,
+    rutJefe VARCHAR(15) NOT NULL,
+    FOREIGN KEY (rutJefe) REFERENCES jefeDeVentas(rutJefe)
+)engine=innodb;
+
+CREATE TABLE detalle (
+    numDetalle INT NOT NULL PRIMARY KEY,
+    tipoDoc VARCHAR(10),
+    cantProd INT,
+    numBoleta INT NOT NULL,
+    numFactura INT NOT NULL,
+    codProd INT NOT NULL,
+    FOREIGN KEY (numBoleta) REFERENCES boleta(numBoleta),
+    FOREIGN KEY (numFactura) REFERENCES factura(numFactura),
+    FOREIGN KEY (codProd) REFERENCES producto(codProd)
+)engine=innodb;
+
+CREATE TABLE bazar (
+    idBazar INT,
+    estadoDia VARCHAR(12),
+    ultModificador VARCHAR(15) NOT NULL,
+    FOREIGN KEY (ultModificador) REFERENCES jefeDeVentas(rutJefe)
+)engine=innodb;
