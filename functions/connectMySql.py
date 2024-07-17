@@ -286,7 +286,131 @@ def ProductManager(user,db):
       break
 
 def addUser(user,db):
-  print("4. agregar usuario")
+  while True:
+        try:
+            system('cls')
+            print('+'*4,'Administracion de usuarios','+'*4)
+            opAdus=int(input('1. Ver usuarios vendedor\
+                             \n2. Agregar nuevo usuario vendedor\
+                             \n3. Modificar usuario vendedor\
+                             \n4. salir\
+                             \n=> '))
+            #ver Usuarios
+            if opAdus==1:
+                sq1='Select rutVendedor,userName,nombre,apellidoPat,fono from Vendedor' # reemplazar el * por todos los nombre de la tablas excepto la contrana
+                try:
+                    db.cursor.execute(sq1)
+                    verUs=db.cursor.fetchall()
+                    print(tab.tabulate(verUs,headers=['Rut Vendedor','Nombre de Usuario','Nombre Vendedor','Apellido Vendedor','Fono vendedor']))
+                except Exception as err:
+                    print(err)
+            #Agregar Usuario Vendedor                
+            elif opAdus==2:
+                rutUs=input('Ingrese Rut de nuevo usuario(sin puntos y con guion)\n=> ')
+                sq1=f'Select rutVendedor from Vendedor where rutVendedor={repr(rutUs)}'
+                try:
+                    db.cursor.execute(sq1)
+                    if db.cursor.fetchone()==None:
+                        nomUsVend=input('Ingrese el nombre de usuario del vendedor: ')
+                        passwordVend=input('Ingrese la contrasenha del usuario: ')
+                        nomVend=input('Ingrese nombre del Vendedor: ')
+                        apVend=input('Ingrese el primer apellido del vendedor: ')
+                        fonoVend=int(input('Ingrese numero del vendedor'))
+
+                        sq2=f'insert into vendedor values({repr(rutUs)},{repr(nomUsVend)},{repr(passwordVend)},{repr(nomVend)},{repr(apVend)},{repr(fonoVend)})'
+                        try:
+                            db.cursor.execute(sq2)
+                            db.conexion.commit()
+                        except Exception as err:
+                            db.conexion.rollback()
+                            print(err)
+                    else:
+                        print('Usuario ya existente')
+                except Exception as err:
+                    print(err)
+            #Modificar usuario
+            elif opAdus==3:
+                rutUs=input('Ingrese Rut de nuevo usuario(sin puntos y con guion)\n=> ')
+                sq1=f'Select * from Vendedor where rutVendedor={repr(rutUs)}'
+                try:
+                    db.cursor.execute(sq1)
+                    usVend=db.cursor.fetchone()
+                    if usVend!=None:
+                        resp=int(input('1. cambiar Usuario\
+                                       \n2. cambiar contrasenha\
+                                       \n3. cambiar Nombre\
+                                       \n4. cambiar Apellido\
+                                       \n5. cambiar fono\
+                                       \n6. salir\
+                                       \n=> '))
+                        if resp==1:
+                            newUs=input(f'Ingrese nuevo nombre de usuario: {usVend[1]}=> ')
+                            sq2=f'update vendedor set userName={repr(newUs)} where rutVendedor={repr(rutUs)}'
+                            try:
+                                db.cursor.execute(sq2)
+                                db.conexion.commit()
+                            except Exception as err:
+                                db.conexion.rollback()
+                                print(err)
+                            print('\nUsuario modificado')
+                        elif resp==2:
+                            newpass=input(f'Ingrese nueva contrasenha => ')
+                            sq2=f'update vendedor set password1={repr(newpass)} where rutVendedor={repr(rutUs)}'
+                            try:
+                                db.cursor.execute(sq2)
+                                db.conexion.commit()
+                            except Exception as err:
+                                db.conexion.rollback()
+                                print(err)
+                            print('\nUsuario modificado')
+                        elif resp==3:
+                            newNom=input(f'Ingrese nuevo nombre: {usVend[3]}=> ')
+                            sq2=f'update vendedor set nombre={repr(newNom)} where rutVendedor={repr(rutUs)}'
+                            try:
+                                db.cursor.execute(sq2)
+                                db.conexion.commit()
+                            except Exception as err:
+                                db.conexion.rollback()
+                                print(err)
+                            print('\nUsuario modificado')
+                        elif resp==4:
+                            newAp=input(f'Ingrese nuevo apellido: {usVend[4]}=> ')
+                            sq2=f'update vendedor set apellidoPat={repr(newAp)} where rutVendedor={repr(rutUs)}'
+                            try:
+                                db.cursor.execute(sq2)
+                                db.conexion.commit()
+                            except Exception as err:
+                                db.conexion.rollback()
+                                print(err)
+                            print('Usuario modificado')
+                        elif resp==5:
+                            newFon=input(f'Ingrese nuevo fono: {usVend[5]}=> ')
+                            sq2=f'update vendedor set fono={repr(newFon)} where rutVendedor={repr(rutUs)}'
+                            try:
+                                db.cursor.execute(sq2)
+                                db.conexion.commit()
+                            except Exception as err:
+                                db.conexion.rollback()
+                                print(err)
+                            print('\nUsuario modificado')
+                        elif resp==6:
+                            print('saliendo del menu')
+                            pass
+                        else:
+                            print('Opcion incorrecta saliendo del menu...')
+                            pass
+                    else:
+                        print('Usuario no existe')
+                except Exception as err:
+                    print(err)
+            elif opAdus==4:
+                print('Abandonando Administracion de usuario...')
+                break
+            else:
+                print('Opcion invalida')
+        except Exception as err:
+            print(err)
+        input('\n\nPresione ENTER para continuar...')
 
 ###Seller menu functions###
 #Buscar producto
