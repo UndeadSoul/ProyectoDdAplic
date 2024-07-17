@@ -6,17 +6,30 @@ from datetime import date
 
 #ingresa de bdd
 class Database():
-    def __init__(self):
-        self.conexion = mysql.connector.connect(
-            user='root',
-            password='contramysql',
-            host='127.0.0.1',
-            database='nona')
-        self.cursor = self.conexion.cursor()
-    
-    def cerrarBD(self):
-        self.cursor.close()
-        self.conexion.close()
+  def __init__(self):
+      self.conexion = mysql.connector.connect(
+          user='root',
+          password='contramysql',
+          host='127.0.0.1',
+          database='nona')
+      self.cursor = self.conexion.cursor()
+  
+  def cerrarBD(self):
+      self.cursor.close()
+      self.conexion.close()
+
+def estadocheck(db):
+  estado=""
+  sq0=f'select estadodia from bazar'
+  try:
+    db.cursor.execute(sq0)
+    result=db.cursor.fetchone()
+    estado=str(result[0])
+  except Exception as err:
+    db.conexion.rollback()
+    print(err)
+
+  return estado
 
 #terminado ¡¡¡NO TOCAR!!!
 def credentials(user,password,db):

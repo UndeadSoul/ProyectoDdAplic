@@ -10,18 +10,24 @@ db=Database()
 #main menu
 while True:
     system("cls")
+    #para ingresar por defecto al jefedeventas user=adminjdv password=contramysql
+    #para ingresar por defecto al vendedor user=admin password=contramysql
     user=input("Ingrese Usuario: ")
     password=input("ingrese Contraseña: ")
     typeOfUser=credentials(user,password,db)
     system("cls")
     match typeOfUser.lower():
         case "vendedor":
-            input(f"Bienvenido Vendedor {user} \
-                  \npresione Enter para ingresar al menu")
-            sellerMenu(user,db)
+            if estadocheck(db).lower()=="abierto":
+                input(f"Bienvenido Vendedor {user} \
+                    \nPresione Enter para ingresar al menu... ")
+                sellerMenu(user,db)
+            else:
+                print("El estado del Bazar se encuentra actualmente cerrado, contactese con su jefe de ventas. ")
+                input("Presione Enter para volver al inicio... ")
         case "jefedeventas":
             input(f"Bienvenido Jefe de ventas {user} \
-                  \npresione Enter para ingresar al menu...")
+                  \nPresione Enter para ingresar al menu... ")
             salesManagerMenu(user,db)
         case _:
             system("cls")

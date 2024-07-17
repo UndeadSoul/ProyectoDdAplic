@@ -54,7 +54,8 @@ def sellerMenu(user,db):
                 input("Presione enter para continuar... ")
                 pass
             case 5: #salir a inicio de sesión
-                print("5")
+                print("Cerrando sesión\
+                      \nPresione enter para continuar... ")
                 break
         system("cls")
     input("presione enter")
