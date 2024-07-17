@@ -10,5 +10,6 @@ update bazar set estadoDia="cerrado", ultModificador="20324143-7" where idBazar=
 
 alter table bazar add cantBoletas int;
 alter table bazar add cantFacturas int; 
+alter table bazar add cantVentas int;
 
-update bazar set cantBoletas=0, cantFacturas=0;
+update bazar set cantVentas=0;

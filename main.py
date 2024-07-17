@@ -27,4 +27,3 @@ while True:
             system("cls")
             input("Las credenciales entregadas no coinciden con ninguna en nuestra base de datos.\
                   \nPresione Enter para intentar nuevamente")
-    #this should be the main menu where the program starts and goes to the specific menus
