@@ -4,6 +4,7 @@ from functions.connectMySql import *
 from functions.vendedor import *
 from functions.jefedeventas import *
 
+
 #create db
 db=Database()
 #main menu

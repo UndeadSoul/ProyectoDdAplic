@@ -3,3 +3,12 @@ insert into producto values(12345678,"galleta",2990,"20324143-7");
 insert into jefeDeVentas values('20324143-7','pepito','hola','Jose','Camello',12345678);
 
 insert into vendedor values('22224143-7','julio','nasheii','Jose','Camello',12345678);
+
+insert into bazar values(1234,'abierto','20324143-7');
+
+update bazar set estadoDia="cerrado", ultModificador="20324143-7" where idBazar=1234
+
+alter table bazar add cantBoletas int;
+alter table bazar add cantFacturas int; 
+
+update bazar set cantBoletas=0, cantFacturas=0;

@@ -32,16 +32,16 @@ def salesManagerMenu(user,db):
         system("cls")
         match option:
             case 1: #modificar día
-                modifyDay(user)
+                modifyDay(user,db)
                 pass
             case 2: #obtener registros
-                getRecords(user)
+                getRecords(user,db)
                 pass
             case 3: #agregar producto
-                addProduct(user)
+                ProductManager(user,db)
                 pass
             case 4: #agregar nuevo usuario
-                addUser(user)
+                addUser(user,db)
                 pass
             case 5: #salir a inicio de sesión
                 print("5")

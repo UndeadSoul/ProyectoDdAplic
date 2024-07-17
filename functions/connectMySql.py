@@ -47,24 +47,26 @@ def credentials(user,password,db):
     return(tipousuario)
 
 ###Sales manager menu functions###
+#modificar estado del dia
 def modifyDay(user,db):
   while True:
     system("cls")
     print('+'*4,'Menu estado del dia','+'*4)
     try:
-      dia=int(input('\n1.- Ver estado del dia.\
-            \n2.- Modificar estado del dia.\
-            \n3.- Salir.\
+      dia=int(input('\n1. Ver estado del dia.\
+            \n2. Modificar estado del dia.\
+            \n3. Salir.\
             \n =>'))
       while dia!=1 and dia!=2 and dia!=3:
         dia=int(input('Error, Opcion invalida\
-          \n1.- Ver estado del dia.\
-          \n2.- Modificar estado del dia.\
-          \n3.- Salir.\
+          \n1. Ver estado del dia.\
+          \n2. Modificar estado del dia.\
+          \n3. Salir.\
           \n =>'))        
     except Exception as err:
       print(err)
     
+    #ver estado del dia
     if dia==1:
       sql1='select * from bazar'
       try:
@@ -75,67 +77,171 @@ def modifyDay(user,db):
       if verD!=None:
         print(f'Estado Del dia:\t{verD[1]}') 
       else:
-        print('No se ha ingresado estado del dia')
+        print('\nNo se ha ingresado estado del dia')
       
-      input('Presione ENTER para continuar...')
+      input('\nPresione ENTER para continuar...')
     
+    #Modificar estado del dia
     elif dia==2:
-    
-      sq1='select estadoDia from bazar'
+      sq1='select * from bazar'
       try:
         db.cursor.execute(sq1)
-        verD=db.cursor.fetchone()
+        estDia=db.cursor.fetchone()
         
       except Exception as err:
         print(err)
         
-      if verD!=None:
-        print(f'Estado Del dia:\t{verD[1]}')
-        if verD[1]=='abierto':
-          est=input(f'El estado del dia esta {verD[1]}\
+      if estDia!=None:
+        print(f'Estado Del dia:\t{estDia[1]}')
+        if estDia[1]=='abierto':
+          est=input(f'El estado del dia esta {estDia[1]}\
                 \n¿Desea cambiarlo a Cerrado?(s/n)')
-          while est!='s' or est!='n':
-            est=input('Error, Opcion invalida\
+          while est!='s' and est!='n':
+            est=input('\nError, Opcion invalida\
                       \n¿Desea cambiarlo a Cerrado?(s/n)')
           if est.lower()=='s':
-            sq2=f'update bazar set estadoDia="cerrado", ultModificador={repr(user)} '
             try:
+              rutjef=input('Ingrese su rut para confirmar(sin punto y con guion)\n\n')
+              sq2=f'select * from jefeDeVentas where rutJefe={repr(rutjef)}'
               db.cursor.execute(sq2)
-              verD=db.cursor.fetchone()
+              rutCon=db.cursor.fetchone()
             except Exception as err:
-              print(err)  
-            print('se ha actualizado el estado del dia a cerrado')
-            input('Presione ENTER para continuar...')
-          
+              print(err)
+            if rutCon!=None:
+              print('rut confirmado\
+                    \nCambiando el estado del dia a cerrado')
+              sq3=f'update bazar set estadoDia="cerrado", ultModificador={repr(rutjef)} where idBazar={repr(estDia[0])}'
+              try:
+                db.cursor.execute(sq3)
+                db.conexion.commit()
+              except Exception as err:
+                db.conexion.rollback()
+                print(err)
+              print('\nEstado del dia cambiado')
+            else:
+              pass
           else:
             pass
-        
-        elif verD[1]=='cerrado':
-          est=input(f'El estado del dia esta {verD[1]}\
+        elif estDia[1]=='cerrado':
+          est=input(f'El estado del dia esta {estDia[1]}\
                 \n¿Desea cambiarlo a Abierto?(s/n)')
-          while est!='s' or est!='n':
-            est=input('Error, Opcion invalida\
+          while est!='s' and est!='n':
+            est=input('\nError, Opcion invalida\
                       \n¿Desea cambiarlo a Abierto?(s/n)')
-          
-
-
+          if est.lower()=='s':
+            try:
+              rutjef=input('Ingrese su rut para confirmar(sin punto y con guion)\n\n')
+              sq2=f'select * from jefeDeVentas where rutJefe={repr(rutjef)}'
+              db.cursor.execute(sq2)
+              rutCon=db.cursor.fetchone()
+            except Exception as err:
+              print(err)
+            if rutCon!=None:
+              print('rut confirmado\
+                    \nCambiando el estado del dia a abierto')
+              sq3=f'update bazar set estadoDia="abierto", ultModificador={repr(rutjef)} where idBazar={repr(estDia[0])}'
+              try:
+                db.cursor.execute(sq3)
+                db.conexion.commit()
+              except Exception as err:
+                db.conexion.rollback()
+                print(err)
+              print('\nEstado del dia cambiado')
+            else:
+              pass
+          else:
+            pass
       else:
         print('No se ha ingresado estado del dia')
-      
-      input('Presione ENTER para continuar...')
-      
 
+      input('\nPresione ENTER para continuar...')
+    
+    #Salir del menu
     elif dia==3:
-      input('Abandonando MODIFYDAY presione ENTER para continuar...')
+      print('Abandonando MODIFYDAY...')
       break
 
-def getRecords(user):
+def getRecords(user,db):
   print("2. obtener registros")
 
-def addProduct(user):
-  print("3. agregar producto")
+#Agregar producto
+def ProductManager(user,db):
+  while True:
+    system("cls")
+    print('+'*4,'Menu De Productos','+'*4)
+    try:
+      opProd=int(input('\n1. Ver productos.\
+            \n2. Agregar productos.\
+            \n3. Modificar producto\
+            \n4. Eliminar producto\
+            \n5. Salir.\
+            \n =>'))
+      while opProd!=1 and opProd!=2 and opProd!=3 and opProd!=4 and opProd!=5:
+        opProd=int(input('Error, Opcion invalida\
+          \n1. Ver productos.\
+          \n2. Agregar productos.\
+          \n3. Modificar producto\
+          \n4. Eliminar producto\
+          \n5. Salir.\
+          \n =>'))        
+    except Exception as err:
+      print(err)
+    
+    if opProd==1:
+      sq1='select * from producto'
+      try:
+        db.cursor.execute(sq1)
+        verProd=db.cursor.fetchone()
+        print(verProd)
+      except Exception as err:
+        print(err)
+      
+      input('\nPresione ENTER para continuar...')  
+      
+    elif opProd==2:
+      idprod=input('Ingrese Codigo del producto')
 
-def addUser(user):
+      sq1=f'select codProd from producto where codProd={repr(idprod)}'
+      try:
+        db.cursor.execute(sq1)
+        if db.cursor.fetchone()==None:
+          nombProd=input('Ingrese Nombre del producto: ')
+          valorProd=int(input('Ingrese valor unitario del producto: '))
+          rutJefe=input(f'Usted va a agregar el producto {nombProd}\
+                        \nIngre su Rut para confirmar (sin puntos y con guion)\n=>')
+          sq2=f'select * from jefeDeVentas where rutJefe={repr(rutJefe)}'
+          try:
+              db.cursor.execute(sq2)
+              rutCon=db.cursor.fetchone()
+          except Exception as err:
+              print(err)
+          if rutCon!=None:
+              print('rut confirmado\
+                    \nAgregando producto')
+              sq3=f'insert into producto values({repr(idprod)},{repr(nombProd)},{repr(valorProd)},{repr(rutJefe)})'
+              try:
+                db.cursor.execute(sq3)
+                db.conexion.commit()
+              except Exception as err:
+                db.conexion.rollback()
+                print(err)
+        
+        else:
+          print('Producto ya existente')
+
+      except Exception as err:
+        print(err)
+
+    elif opProd==3:
+      pass
+    elif opProd==4:
+      pass
+    elif opProd==5:
+      print('Abandonando Menu de productos...')
+      break
+
+
+def addUser(user,db):
   print("4. agregar usuario")
 
 ###Seller menu functions###
@@ -151,7 +257,7 @@ def searchProd(db):
       print("Error, el codigo de producto debe ser numerico (8 digitos)")
       input("Presione enter para continuar... ")
   #comando Consulta Sql
-  sq1=f'select * from producto where codprod={codigoProd}'
+  sq1=f'select codProd,nombreProd,valorUnit from producto where codprod={codigoProd}'
   #execucion consulta
   try:
     db.cursor.execute(sq1)
@@ -196,6 +302,13 @@ def addProduct(producto,productList):
     productList.append(producto)
     return productList
 
+#Calcular el total de los productos
+def productTotal(productList):
+  total=0
+  for i in range(len(productList)):
+    total=total+(productList[i][4])
+  return total
+
 #Eliminar producto
 def delProduct(productList):
   #preguntar cual quiere eliminar
@@ -232,42 +345,78 @@ def delProduct(productList):
   #? no si está incorrecto podria preguntar si quiere cancelar o intentarlo denuevo
 
 #Generar venta
-def generateSell(user,productList,db):
+def generateSell(user,productList,total,db):
   #inicializacion
   tipoDoc=""
+  claveDoc=""
   confirm=""
+  numBoleta=1
   #ciclo para preguntar por modificaciones
   while True:
     #elegir documento
     system("cls")
     #mostrar la lista con el total
     print(productList)
-    tipoDoc=int(input("Desea boleta o factura (b/f): "))
+    tipoDoc=input("Desea boleta o factura (b/f): ")
     while tipoDoc!="b" and tipoDoc!="f":
       system("cls")
       #mostrar la lista con el total
       print(productList)
-      tipoDoc=int(input("Desea boleta o factura (b/f): "))
+      tipoDoc=input("Desea boleta o factura (b/f): ")
     #preguntar por confirmacion
     system("cls")
     #mostrar la lista con el total y eleccion de documento
     print(productList)
     print(tipoDoc)
-    tipoDoc=int(input("Está correcto? (si/no): "))
+    confirm=input("Está correcto? (si/no): ")
     while confirm!="si" and confirm!="no":
       system("cls")
       #mostrar la lista con el total
       print(productList)
-      tipoDoc=int(input("Está correcto? (si/no): "))
+      confirm=input("Está correcto? (si/no): ")
     if confirm=="no":
-      print("Volviendo al menu de vendedor...")
-      
+      print("Volviendo al menu de vendedor")
+      return
+    if tipoDoc=="b":
       #boleta
+        #buscar numero de boleta
+        sq1=(f'select cantBoletas from bazar where idbazar="1234"')
+        #execucion consulta
+        try:
+          db.cursor.execute(sq1)
+          num=db.cursor.fetchone()
+          numBoleta=numBoleta+num[0]
+          print("cantidad boletas:",numBoleta)
+        except Exception as err:
+          db.conexion.rollback()
+          print(err)
+        #actualizar cantidad de boletas
+        sq2=(f'update bazar set cantBoletas=cantBoletas+1')
+        #execucion update
+        try:
+          db.cursor.execute(sq2)
+          db.conexion.commit()      
+          print("cantidad de boletas actualizado")
+        except Exception as err:
+          db.conexion.rollback()
+          print(err)
         #generar boleta
+        totalNeto=total
         #subir a bdd
+        sq3=(f'insert into boleta values({repr(numBoleta)},{repr(totalNeto)})')
+        #execucion insert
+        try:
+          db.cursor.execute(sq3)
+          db.conexion.commit()
+          print("Boleta guardada")
+        except Exception as err:
+          db.conexion.rollback()
+          print(err)
+    elif tipoDoc=="f":
       #factura
         #preguntar datos
         #generar factura
         #subir a base de datos
+        pass
     #registrar venta en bdd
-  print("4. Generar venta") #!borrar en version final
+    return
