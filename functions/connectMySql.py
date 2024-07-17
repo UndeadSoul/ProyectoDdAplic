@@ -66,7 +66,7 @@ def modifyDay(user,db):
       print(err)
     
     if dia==1:
-      sql1='select * from bazar order by idBazar desc'
+      sql1='select * from bazar'
       try:
         db.cursor.execute(sql1)
         verD=db.cursor.fetchone()
@@ -80,7 +80,51 @@ def modifyDay(user,db):
       input('Presione ENTER para continuar...')
     
     elif dia==2:
-      pass
+    
+      sq1='select estadoDia from bazar'
+      try:
+        db.cursor.execute(sq1)
+        verD=db.cursor.fetchone()
+        
+      except Exception as err:
+        print(err)
+        
+      if verD!=None:
+        print(f'Estado Del dia:\t{verD[1]}')
+        if verD[1]=='abierto':
+          est=input(f'El estado del dia esta {verD[1]}\
+                \n¿Desea cambiarlo a Cerrado?(s/n)')
+          while est!='s' or est!='n':
+            est=input('Error, Opcion invalida\
+                      \n¿Desea cambiarlo a Cerrado?(s/n)')
+          if est.lower()=='s':
+            sq2=f'update bazar set estadoDia="cerrado", ultModificador={repr(user)} '
+            try:
+              db.cursor.execute(sq2)
+              verD=db.cursor.fetchone()
+            except Exception as err:
+              print(err)  
+            print('se ha actualizado el estado del dia a cerrado')
+            input('Presione ENTER para continuar...')
+          
+          else:
+            pass
+        
+        elif verD[1]=='cerrado':
+          est=input(f'El estado del dia esta {verD[1]}\
+                \n¿Desea cambiarlo a Abierto?(s/n)')
+          while est!='s' or est!='n':
+            est=input('Error, Opcion invalida\
+                      \n¿Desea cambiarlo a Abierto?(s/n)')
+          
+
+
+      else:
+        print('No se ha ingresado estado del dia')
+      
+      input('Presione ENTER para continuar...')
+      
+
     elif dia==3:
       input('Abandonando MODIFYDAY presione ENTER para continuar...')
       break
@@ -95,7 +139,8 @@ def addUser(user):
   print("4. agregar usuario")
 
 ###Seller menu functions###
-def searchProd(db):
+#Buscar producto
+def searchProd(db):  
   codigoProd=0
   #Consulta codigo de producto a buscar
   while True:
@@ -119,7 +164,8 @@ def searchProd(db):
   print(result) #TODO formatear el resultado
   return(result)
 
-def addProduct(producto,productList):
+#Agregar producto
+def addProduct(producto,productList): 
   #revisa si se ha buscado un producto
   if(producto==None or len(producto)<1):
     print("Debe haber buscado un producto valido")
@@ -150,6 +196,7 @@ def addProduct(producto,productList):
     productList.append(producto)
     return productList
 
+#Eliminar producto
 def delProduct(productList):
   #preguntar cual quiere eliminar
   codigo=0
@@ -184,5 +231,43 @@ def delProduct(productList):
   print("El producto ingresado no se ha encontrado")
   #? no si está incorrecto podria preguntar si quiere cancelar o intentarlo denuevo
 
-def generateSell(user):
+#Generar venta
+def generateSell(user,productList,db):
+  #inicializacion
+  tipoDoc=""
+  confirm=""
+  #ciclo para preguntar por modificaciones
+  while True:
+    #elegir documento
+    system("cls")
+    #mostrar la lista con el total
+    print(productList)
+    tipoDoc=int(input("Desea boleta o factura (b/f): "))
+    while tipoDoc!="b" and tipoDoc!="f":
+      system("cls")
+      #mostrar la lista con el total
+      print(productList)
+      tipoDoc=int(input("Desea boleta o factura (b/f): "))
+    #preguntar por confirmacion
+    system("cls")
+    #mostrar la lista con el total y eleccion de documento
+    print(productList)
+    print(tipoDoc)
+    tipoDoc=int(input("Está correcto? (si/no): "))
+    while confirm!="si" and confirm!="no":
+      system("cls")
+      #mostrar la lista con el total
+      print(productList)
+      tipoDoc=int(input("Está correcto? (si/no): "))
+    if confirm=="no":
+      print("Volviendo al menu de vendedor...")
+      
+      #boleta
+        #generar boleta
+        #subir a bdd
+      #factura
+        #preguntar datos
+        #generar factura
+        #subir a base de datos
+    #registrar venta en bdd
   print("4. Generar venta") #!borrar en version final
