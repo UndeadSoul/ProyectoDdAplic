@@ -33,7 +33,7 @@ def salesManagerMenu(user,db):
         system("cls")
         match option:
             case 1: #modificar día
-                modifyDay(user,db)
+                modifyDay(db)
                 input("Presione enter para continuar... ")
                 pass
             case 2: #obtener registros
