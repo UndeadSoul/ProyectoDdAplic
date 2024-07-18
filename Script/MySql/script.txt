@@ -25,7 +25,7 @@ CREATE TABLE boleta (
 )engine=innodb;
 
 CREATE TABLE registroDeVenta (
-    codVenta VARCHAR(10) NOT NULL PRIMARY KEY,
+    codVenta INT NOT NULL PRIMARY KEY,
     fecha DATE,
     tipoDoc VARCHAR(10),
     numFactura INT NOT NULL,
@@ -65,9 +65,32 @@ CREATE TABLE detalle (
     FOREIGN KEY (codProd) REFERENCES producto(codProd)
 )engine=innodb;
 
-CREATE TABLE bazar (
-    idBazar INT,
+CREATE TABLE bazar1 (
+    idBazar INT NOT NULL PRIMARY KEY,
     estadoDia VARCHAR(12),
     ultModificador VARCHAR(15) NOT NULL,
-    FOREIGN KEY (ultModificador) REFERENCES jefeDeVentas(rutJefe)
+    FOREIGN KEY (ultModificador) REFERENCES jefeDeVentas(rutJefe),
+    cantBoletas INT,
+    cantFacturas INT,
+    cantVentas INT,
+    cantDetalles INT
 )engine=innodb;
+
+
+###########ingresar los valores por defecto##############
+#para ingresar por defecto al jefedeventas user=adminjdv password=contramysql
+insert into jefeDeVentas values('20324143-7','adminjdv','contramysql','Victor','Fierro',12345678);
+
+#para ingresar por defecto al vendedor user=adminv password=contramysql
+insert into vendedor values('20324143-7','adminv','contramysql','Victor','Fierro',12345678);
+
+#ingresar producto para pruebas
+insert into producto values(12345678,"galleta",2990,"20324143-7");
+
+#ingresar bazar
+insert into bazar values(1234,'abierto','20324143-7');
+
+insert into jefeDeVentas values("20324143-7","adminjdv","contramysql","Victor","Fierro",12345678);
+insert into vendedor values("20324143-7","adminv","contramysql","Victor","Fierro",12345678);
+insert into producto values(12345678,"galleta",2990,"20324143-7");
+insert into bazar1 values(1234,"abierto","20324143-7",0,0,0,0);

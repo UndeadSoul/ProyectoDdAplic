@@ -9,7 +9,8 @@ def salesManagerMenu(user,db):
     while True:
         while True:
             try:
-                option=int(input("Elija una opcion:\
+                system("cls")
+                option=int(input("Elija una opcion(1-5):\
                             \n1. Modificar día\
                             \n2. Obtener registros\
                             \n3. Agregar producto\
@@ -18,7 +19,7 @@ def salesManagerMenu(user,db):
                             \n=> "))
                 while option<=0 or option>5:
                     system("cls")
-                    option=int(input("ERROR. Elija una opcion: \
+                    option=int(input("ERROR. Elija una opcion(1-5): \
                                 \n1. Modificar día\
                                 \n2. Obtener registros\
                                 \n3. Agregar producto\
@@ -27,28 +28,30 @@ def salesManagerMenu(user,db):
                                 \n=> "))
                 break
             except ValueError:
-                input("Error. Ingrese una opcion valida para el menu(presione enter para continuar)...")
+                input("Error. Ingrese una opcion valida para el menu(presione enter para continuar)... ")
                 system("cls")
         system("cls")
         match option:
             case 1: #modificar día
                 modifyDay(user,db)
+                input("Presione enter para continuar... ")
                 pass
             case 2: #obtener registros
                 getRecords(user,db)
+                input("Presione enter para continuar... ")
                 pass
             case 3: #agregar producto
                 ProductManager(user,db)
+                input("Presione enter para continuar... ")
                 pass
             case 4: #agregar nuevo usuario
                 addUser(user,db)
+                input("Presione enter para continuar... ")
                 pass
             case 5: #salir a inicio de sesión
-                print("5")
+                print("Cerrando sesión")
                 break
-        input("continuar")
         system("cls")
-
-###########
-    input("presione enter")
+#####################
+    input("Presione enter para continuar... ")
     pass

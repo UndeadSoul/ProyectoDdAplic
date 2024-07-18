@@ -38,11 +38,9 @@ def credentials(user,password,db):
     try:
       db.cursor.execute(sq1)
       result=db.cursor.fetchone()
-
     except Exception as err:
       db.conexion.rollback()
       print(err)
-    
     if result!=None:
        if result[1]==user and result[2]==password:
         tipousuario='Vendedor'
@@ -64,6 +62,7 @@ def credentials(user,password,db):
 ###Sales manager menu functions###
 #modificar estado del dia
 def modifyDay(user,db):
+  algunNombreTemporal=""
   while True:
     system("cls")
     print('+'*4,'Menu estado del dia','+'*4)
@@ -80,13 +79,14 @@ def modifyDay(user,db):
           \n =>'))        
     except Exception as err:
       print(err)
-    
+    print(db)
     #ver estado del dia
     if dia==1:
       sql1='select * from bazar'
       try:
-        db.cursor.execute(sql1)
-        verD=db.cursor.fetchone()
+        db.cursor.execute('select * from bazar')
+        print("HHHHHHHHHHHHEEEEEEEEEEEERRRRRRRRRRRRREEEEEEEEEEEEEEEEEE")
+        verD=db.cursor.fetchall()
       except Exception as err:
         print(err)
       if verD!=None:
@@ -95,7 +95,7 @@ def modifyDay(user,db):
         print('\nNo se ha ingresado estado del dia')
       
       input('\nPresione ENTER para continuar...')
-    
+
     #Modificar estado del dia
     elif dia==2:
       sq1='select * from bazar'
@@ -177,30 +177,44 @@ def modifyDay(user,db):
       break
 
 def getRecords(user,db):
-  print("2. obtener registros")
+  while True:
+    system("cls")
+    print('+'*4,'Gestor de Ventas','+'*4)
+    try:
+      reps=int(('1. Ver Tabla Registro de ventas\
+                 \n5. Salir\
+                  \n=> '))
+    except Exception:
+      pass
+    if reps==1:
+      sq1='select * from registroDeVenta'
+      try:
+        db.cursor.execute(sq1)
+        verVents=db.cursor.fetcha()
+        print(tab.tabulate(verVents,headers=['Codigo Venta','Fecha de venta','Tipo de Doc','Numero de Factura','Numero de Boleta','Rut Vendedor']))
+      except Exception:
+        pass
+    elif reps==5:
+      print('\nAbandonando Gestor de Ventas...\n')
+      break
+    else:
+      print('Opcion invalida')
+    input('\nPresione ENTER para continuar...')
 
 #Agregar producto
 def ProductManager(user,db):
   while True:
     system("cls")
-    print('+'*4,'Menu De Productos','+'*4)
+    print('+'*4,'Gestor de Productos','+'*4)
     try:
       opProd=int(input('\n1. Ver productos.\
             \n2. Agregar productos.\
             \n3. Modificar producto\
             \n4. Eliminar producto\
             \n5. Salir.\
-            \n => '))
-      while opProd!=1 and opProd!=2 and opProd!=3 and opProd!=4 and opProd!=5:
-        opProd=int(input('Error, Opcion invalida\
-          \n1. Ver productos.\
-          \n2. Agregar productos.\
-          \n3. Modificar producto\
-          \n4. Eliminar producto\
-          \n5. Salir.\
-          \n => '))        
-    except Exception as err:
-      print(err)
+            \n => '))      
+    except Exception:
+      pass
     
     if opProd==1:
       sq1='select * from producto'
@@ -210,8 +224,6 @@ def ProductManager(user,db):
         print(tab.tabulate(verProd,headers=["Id Producto","Nombre producto","Valor producto","Rut jefe agregado"]))
       except Exception as err:
         print(err)
-      
-      input('\nPresione ENTER para continuar...')  
       
     elif opProd==2:
       try:
@@ -243,7 +255,6 @@ def ProductManager(user,db):
           print('Producto ya existente')
       except Exception as err:
         print(err)
-      input('\nPresione ENTER para continuar...')
 
     elif opProd==3:
       try:
@@ -267,7 +278,6 @@ def ProductManager(user,db):
           print('Producto no encontrado')
       except Exception as err:
         print(err)
-      input('\nPresione ENTER para continuar...')
       
     elif opProd==4:
       try:
@@ -289,14 +299,18 @@ def ProductManager(user,db):
           except Exception as err:
             db.conexion.rollback()
             print(err)
-          print('\nProducto elimindao')
+          print('\nProducto elimindao\n')
       except Exception as err:
         print(err)
-      input('\nPresione ENTER para continuar...')
 
     elif opProd==5:
-      print('Abandonando Menu de productos...')
+      print('\nAbandonando Menu de productos...\n')
       break
+
+    else:
+      print('\nOpcion no valida')
+    
+    input('\nPresione ENTER para continuar...')
 
 def addUser(user,db):
   while True:
@@ -308,9 +322,11 @@ def addUser(user,db):
                              \n3. Modificar usuario vendedor\
                              \n4. salir\
                              \n=> '))
+        except Exception as err:
+            pass
             #ver Usuarios
             if opAdus==1:
-                sq1='Select rutVendedor,userName,nombre,apellidoPat,fono from Vendedor' # reemplazar el * por todos los nombre de la tablas excepto la contrana
+                sq1='Select rutVendedor,userName,nombre,apellidoPat,fono from Vendedor'
                 try:
                     db.cursor.execute(sq1)
                     verUs=db.cursor.fetchall()
@@ -410,20 +426,19 @@ def addUser(user,db):
                             print('saliendo del menu')
                             pass
                         else:
-                            print('Opcion incorrecta saliendo del menu...')
+                            print('\nOpcion incorrecta saliendo del menu...\n')
                             pass
                     else:
-                        print('Usuario no existe')
+                        print('\nUsuario no existe\n')
                 except Exception as err:
                     print(err)
             elif opAdus==4:
-                print('Abandonando Administracion de usuario...')
+                print('\nAbandonando Administracion de usuario...\n')
                 break
             else:
-                print('Opcion invalida')
-        except Exception as err:
-            print(err)
-        input('\n\nPresione ENTER para continuar...')
+                print('\nOpcion invalida\n')
+        input('\nPresione ENTER para continuar...')
+
 
 ###Seller menu functions###
 #Buscar producto

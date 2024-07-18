@@ -13,7 +13,7 @@ def sellerMenu(user,db):
             try:
                 system("cls")
                 printPrLs(productList,lastSearch,productListTotal)
-                option=int(input("Elija una opcion:\
+                option=int(input("Elija una opcion(1-5):\
                             \n1. Buscar Producto\
                             \n2. Agregar Producto\
                             \n3. Eliminar producto\
@@ -23,7 +23,7 @@ def sellerMenu(user,db):
                 while option<=0 or option>5:
                     system("cls")
                     printPrLs(productList,lastSearch,productListTotal)
-                    option=int(input("ERROR. Elija una opcion: \
+                    option=int(input("ERROR. Elija una opcion(1-5):\
                                 \n1. Buscar Producto\
                                 \n2. Agregar Producto\
                                 \n3. Eliminar producto\
@@ -32,7 +32,8 @@ def sellerMenu(user,db):
                                 \n=> "))
                 break
             except ValueError:
-                input("Error. Ingrese una opcion valida para el menu(presione enter para continuar)...")
+                input("Error. Ingrese una opcion valida para el menu(presione enter para continuar)... ")
+                system("cls")
         system("cls")   #cls previo a las opciones del menu
         match option:
             case 1: #buscar producto
@@ -54,9 +55,9 @@ def sellerMenu(user,db):
                 input("Presione enter para continuar... ")
                 pass
             case 5: #salir a inicio de sesión
-                print("Cerrando sesión\
-                      \nPresione enter para continuar... ")
+                print("Cerrando sesión ")
                 break
         system("cls")
-    input("presione enter")
+#####################
+    input("Presione enter para continuar... ")
     pass
