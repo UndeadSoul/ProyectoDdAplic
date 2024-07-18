@@ -90,7 +90,7 @@ def modifyDay(user,db):
       except Exception as err:
         print(err)
       if verD!=None:
-        print(f'Estado Del dia:\t{verD[1]}') 
+        print(f'Estado Del dia:\t{verD[0]}') 
       else:
         print('\nNo se ha ingresado estado del dia')
       

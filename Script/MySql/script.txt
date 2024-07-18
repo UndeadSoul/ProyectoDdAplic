@@ -65,8 +65,8 @@ CREATE TABLE detalle (
     FOREIGN KEY (codProd) REFERENCES producto(codProd)
 )engine=innodb;
 
-CREATE TABLE bazar1 (
-    idBazar INT NOT NULL PRIMARY KEY,
+CREATE TABLE bazar (
+    idBazar INT NOT NULL,
     estadoDia VARCHAR(12),
     ultModificador VARCHAR(15) NOT NULL,
     FOREIGN KEY (ultModificador) REFERENCES jefeDeVentas(rutJefe),
@@ -93,4 +93,6 @@ insert into bazar values(1234,'abierto','20324143-7');
 insert into jefeDeVentas values("20324143-7","adminjdv","contramysql","Victor","Fierro",12345678);
 insert into vendedor values("20324143-7","adminv","contramysql","Victor","Fierro",12345678);
 insert into producto values(12345678,"galleta",2990,"20324143-7");
-insert into bazar1 values(1234,"abierto","20324143-7",0,0,0,0);
+insert into bazar values(1234,"abierto","20324143-7",0,0,0,0);
+insert into factura values(0,"","","","",0);
+insert into boleta values(0,0);
