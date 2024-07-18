@@ -13,8 +13,8 @@ def salesManagerMenu(user,db):
                 option=int(input("Elija una opcion(1-5):\
                             \n1. Modificar día\
                             \n2. Obtener registros\
-                            \n3. Agregar producto\
-                            \n4. Agregar Nuevo Usuario\
+                            \n3. Gestor de Productos\
+                            \n4. Gestor de Usuarios\
                             \n5. Cerrar sesión\
                             \n=> "))
                 while option<=0 or option>5:
@@ -22,8 +22,8 @@ def salesManagerMenu(user,db):
                     option=int(input("ERROR. Elija una opcion(1-5): \
                                 \n1. Modificar día\
                                 \n2. Obtener registros\
-                                \n3. Agregar producto\
-                                \n4. Agregar Nuevo Usuario\
+                                \n3. Gestor de Productos\
+                                \n4. Gestor de Usuarios\
                                 \n5. Cerrar sesión\
                                 \n=> "))
                 break

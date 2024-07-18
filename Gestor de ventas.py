@@ -3,7 +3,7 @@ from os import system
 from functions.connectMySql import *
 from functions.vendedor import *
 from functions.jefedeventas import *
-
+from pwinput import pwinput
 
 #create db
 db=Database()
@@ -13,7 +13,7 @@ while True:
     #para ingresar por defecto al jefedeventas user=adminjdv password=contramysql
     #para ingresar por defecto al vendedor user=admin password=contramysql
     user=input("Ingrese Usuario: ")
-    password=input("ingrese Contraseña: ")
+    password=pwinput("ingrese Contraseña: ")
     typeOfUser=credentials(user,password,db)
     system("cls")
     match typeOfUser.lower():
