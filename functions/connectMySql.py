@@ -4,6 +4,7 @@ from os import system
 import time
 from datetime import date
 from pwinput import pwinput
+from functions.prints import *
 
 #ingresa de bdd
 class Database():
@@ -189,21 +190,24 @@ def getRecords(user,db):
     system("cls")
     print('+'*4,'Gestor de Ventas','+'*4)
     try:
-      reps=int(('1. Ver Tabla Registro de ventas\
-                 \n5. Salir\
+      ###Aqui bro
+      reps=int(input('1. Ver Tabla Registro de ventas\
+                 \n2. Salir\
                   \n=> '))
     except Exception:
       pass
+    system("cls")
+    print('Registros de venta')
     if reps==1:
       sq1='select * from registroDeVenta'
       try:
         db.cursor.execute(sq1)
-        verVents=db.cursor.fetcha()
+        verVents=db.cursor.fetchall()
         print(tab.tabulate(verVents,headers=['Codigo Venta','Fecha de venta','Tipo de Doc','Numero de Factura','Numero de Boleta','Rut Vendedor'],tablefmt="psql"))
       except Exception:
         pass
-    elif reps==5:
-      print('\nAbandonando Gestor de Ventas...\n')
+    elif reps==2:
+      print('\nAbandonando Registros de Ventas...\n')
       break
     else:
       print('Opcion invalida')
@@ -704,25 +708,26 @@ def delProduct(productList):
 def generateSell(user,productList,total,db):
   #inicializacion
   tipoDoc=""
-  claveDoc=""
   confirm=""
   numBoleta=1
   numFactura=1
   numVenta=1
+  numDetalle=1
+  formatDoc=[]
   if(len(productList)<1):
     print("Debe haber agregado por lo menos un producto a la lista de compra ")
-    return()
+    return(False)
   #ciclo para preguntar por modificaciones
   while True:
     #elegir documento
     system("cls")
     #mostrar la lista con el total
-    print(productList)
+    print(tab.tabulate(productList,headers=['Codigo Produc.','Nombre Produc.','Valor unitario','Cantidad','Valor Total'],tablefmt='psql'))
     tipoDoc=input("Desea boleta o factura (b/f): ")
     while tipoDoc!="b" and tipoDoc!="f":
       system("cls")
       #mostrar la lista con el total
-      print(productList)
+      print(tab.tabulate(productList,headers=['Codigo Produc.','Nombre Produc.','Valor unitario','Cantidad','Valor Total'],tablefmt='psql'))
       tipoDoc=input("Desea boleta o factura (b/f): ")
     #preguntar por confirmacion
     system("cls")
@@ -730,16 +735,19 @@ def generateSell(user,productList,total,db):
     print(productList)
     print(tipoDoc)
     confirm=input("Está correcto? (si/no): ")
+    system("cls")
     while confirm!="si" and confirm!="no":
       system("cls")
       #mostrar la lista con el total
       print(productList)
       confirm=input("Está correcto? (si/no): ")
+      system("cls")
     if confirm=="no":
       print("Volviendo al menu de vendedor")
-      return
+      return False
     if tipoDoc=="b":
-      #boleta
+      #boleta######################################
+        formatDoc.append("Boleta")
         #buscar numero de boleta
         sq1=(f'select cantBoletas from bazar where idbazar="1234"')
         #execucion consulta
@@ -751,6 +759,7 @@ def generateSell(user,productList,total,db):
         except Exception as err:
           db.conexion.rollback()
           print(err)
+        formatDoc.append(f'N°: {numBoleta}')
         #actualizar cantidad de boletas
         sq2=(f'update bazar set cantBoletas=cantBoletas+1')
         #execucion update
@@ -763,6 +772,7 @@ def generateSell(user,productList,total,db):
           print(err)
         #generar boleta
         totalNeto=total
+        formatDoc.append(totalNeto)
         #subir a bdd
         sq3=(f'insert into boleta values({repr(numBoleta)},{repr(totalNeto)})')
         #execucion insert
@@ -774,12 +784,14 @@ def generateSell(user,productList,total,db):
           db.conexion.rollback()
           print(err)
     elif tipoDoc=="f":
-      #factura
+      #factura#########################################
+        formatDoc.append("Factura")
         #preguntar datos
         razsoccli=input("Ingrese razón social cliente: ")
         rutcli=input("Ingrese rut cliente: ")
         giro=input("Ingrese giro cliente: ")
         direccion=input("Ingrese direccion: ")
+        formatDoc.append([razsoccli,rutcli,giro,direccion])
         #generar factura
         #subir a base de datos
         ###################################
@@ -795,7 +807,8 @@ def generateSell(user,productList,total,db):
         except Exception as err:
           db.conexion.rollback()
           print(err)
-        #actualizar cantidad de boletas
+        formatDoc.append(f'N°: {numFactura}')
+        #actualizar cantidad de facturas
         sq2=(f'update bazar set cantFacturas=cantFacturas+1')
         #execucion update
         try:
@@ -807,6 +820,7 @@ def generateSell(user,productList,total,db):
           print(err)
         #generar boleta
         totalNeto=total
+        formatDoc.append(totalNeto)
         #subir a bdd
         sq3=(f'insert into factura values({numFactura},{repr(razsoccli)},{repr(rutcli)},{repr(giro)},{repr(direccion)},{totalNeto})')
         #execucion insert
@@ -825,11 +839,12 @@ def generateSell(user,productList,total,db):
     try:
       db.cursor.execute(sq6)
       elem=db.cursor.fetchone()
-      codventa=elem[0]+1
+      codventa=elem[0]+numVenta
       db.conexion.commit()
     except Exception as err:
       db.conexion.rollback()
       print(err)
+    formatDoc.append(codventa)
     #modificar el numero de venta de bazar
     sq7=(f'update bazar set cantVentas={codventa}')
     #execucion update
@@ -840,7 +855,6 @@ def generateSell(user,productList,total,db):
     except Exception as err:
       db.conexion.rollback()
       print(err)
-
     today=date.today()
     tipoDoc=tipoDoc
     if(tipoDoc=="b"):
@@ -862,6 +876,7 @@ def generateSell(user,productList,total,db):
       print(err)
     #execucion insert
     formatofecha=str(today.year)+"-"+str(today.month)+"-"+str(today.day)
+    formatDoc.append(formatofecha)
     sq5=(f'insert into registrodeventa values({codventa},{repr(formatofecha)},{repr(tipoDoc)},{numFactura},{numBoleta},{repr(rutVendedor)})')
     try:
       db.cursor.execute(sq5)
@@ -877,7 +892,7 @@ def generateSell(user,productList,total,db):
       try:
         db.cursor.execute(sq8)
         elem=db.cursor.fetchone()
-        numDetalle=elem[0]
+        numDetalle=elem[0]+numDetalle
         db.conexion.commit()
       except Exception as err:
         db.conexion.rollback()
@@ -902,4 +917,7 @@ def generateSell(user,productList,total,db):
       except Exception as err:
         db.conexion.rollback()
         print(err)
-    return
+      formatDoc.append([productList[i][1],productList[i][2],productList[i][3],productList[i][4]])
+    #####imprimir boleta o factura#########
+    printDoc(formatDoc,tipoDoc)
+    return True

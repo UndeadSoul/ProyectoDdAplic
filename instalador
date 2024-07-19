@@ -1,9 +1,0 @@
-@echo off
-
-set origen=nona
-set destino=C:\AppServ\MySql\data
-
-xcopy %origen% %destino% /E /H /C /I
-
-echo Directorio copiado exitosamente.
-pause

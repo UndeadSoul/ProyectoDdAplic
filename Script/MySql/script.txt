@@ -79,20 +79,19 @@ CREATE TABLE bazar (
 
 ###########ingresar los valores por defecto##############
 #para ingresar por defecto al jefedeventas user=adminjdv password=contramysql
-insert into jefeDeVentas values('20324143-7','adminjdv','contramysql','Victor','Fierro',12345678);
+insert into jefeDeVentas values("20324143-7","adminjdv","contramysql","Victor","Fierro",12345678);
 
 #para ingresar por defecto al vendedor user=adminv password=contramysql
-insert into vendedor values('20324143-7','adminv','contramysql','Victor','Fierro',12345678);
+insert into vendedor values("20324143-7","adminv","contramysql","Victor","Fierro",12345678);
 
 #ingresar producto para pruebas
 insert into producto values(12345678,"galleta",2990,"20324143-7");
 
 #ingresar bazar
-insert into bazar values(1234,'abierto','20324143-7');
+insert into bazar values(1234,"cerrado","20324143-7",0,0,0,0);
 
-insert into jefeDeVentas values("20324143-7","adminjdv","contramysql","Victor","Fierro",12345678);
-insert into vendedor values("20324143-7","adminv","contramysql","Victor","Fierro",12345678);
-insert into producto values(12345678,"galleta",2990,"20324143-7");
-insert into bazar values(1234,"abierto","20324143-7",0,0,0,0);
+#ingresar factura nula
 insert into factura values(0,"","","","",0);
+
+#ingresar boleta nula
 insert into boleta values(0,0);

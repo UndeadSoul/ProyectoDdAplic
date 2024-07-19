@@ -53,7 +53,11 @@ def sellerMenu(user,db):
                 input("Presione enter para continuar... ")
                 pass
             case 4: #generar venta
-                generateSell(user,productList,productListTotal,db)
+                realizada=generateSell(user,productList,productListTotal,db)
+                if(realizada==True):
+                    productList=[]
+                    productListTotal=0
+                    lastSearch=""
                 input("Presione enter para continuar... ")
                 pass
             case 5: #salir a inicio de sesión
