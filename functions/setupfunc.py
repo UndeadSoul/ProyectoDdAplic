@@ -11,11 +11,8 @@ def dbDoesntExist(nombredb):
     listdb=mycursor.fetchall()
     noseencuentra=True
     for i in listdb:
-        print(i[0])
-        print(type(i[0]))
         if i[0]==nombredb:
             noseencuentra=False
-    print(noseencuentra)
     if noseencuentra:
         return True
     else:
@@ -30,7 +27,6 @@ def createDb(nombredb):
     sq1=f'Create Database {nombredb}'
     mycursor=mydb.cursor()
     mycursor.execute(sq1)
-    print(mydb)
 
 def createTables(db):
     #################################
@@ -150,7 +146,7 @@ def createTables(db):
 
     #################################
     sq8='CREATE TABLE bazar (\
-        idBazar INT NOT NULL PRIMARY KEY,\
+        idBazar INT NOT NULL,\
         estadoDia VARCHAR(12),\
         ultModificador VARCHAR(15) NOT NULL,\
         FOREIGN KEY (ultModificador) REFERENCES jefeDeVentas(rutJefe),\
@@ -169,14 +165,54 @@ def createTables(db):
     #################################
 
 def defaultValues(db):
-    sq0=f'insert into jefeDeVentas values("20324143-7","adminjdv","contramysql","Victor","Fierro",12345678);\
-            insert into vendedor values("20324143-7","adminv","contramysql","Victor","Fierro",12345678);\
-            insert into producto values(12345678,"galleta",2990,"20324143-7");\
-            insert into bazar values(1234,"abierto","20324143-7",0,0,0,0);'
+    sq0='insert into jefeDeVentas values("20324143-7","adminjdv","contramysql","Victor","Fierro",12345678);'
+    sq1='insert into vendedor values("20324143-7","adminv","contramysql","Victor","Fierro",12345678);'
+    sq2='insert into producto values(12345678,"galleta",2990,"20324143-7");'
+    sq3='insert into bazar values(1234,"cerrado","20324143-7",0,0,0,0);'
+    sq4='insert into factura values(0,"","","","",0);'
+    sq5='insert into boleta values(0,0);'
     try:
         db.cursor.execute(sq0)
-        print("valores por defecto creados")
+        db.conexion.commit()
+        print("valores por defecto jefedeventas creados")
+
     except Exception as err:
         db.conexion.rollback()
         print(err)
+    try:
+        db.cursor.execute(sq1)
+        db.conexion.commit()
+        print("valores por defecto vendedor creados")
+    except Exception as err:
+        db.conexion.rollback()
+        print(err)
+    try:
+        db.cursor.execute(sq2)
+        db.conexion.commit()
+        print("valores por defecto producto creados")
+    except Exception as err:
+        db.conexion.rollback()
+        print(err)
+    try:
+        db.cursor.execute(sq3)
+        db.conexion.commit()
+        print("valores por defecto bazar creados")
+    except Exception as err:
+        db.conexion.rollback()
+        print(err)
+    try:
+        db.cursor.execute(sq4)
+        db.conexion.commit()
+        print("valores por defecto factura creados")
+    except Exception as err:
+        db.conexion.rollback()
+        print(err)
+    try:
+        db.cursor.execute(sq5)
+        db.conexion.commit()
+        print("valores por defecto boleta creados")
+    except Exception as err:
+        db.conexion.rollback()
+        print(err)
+
     pass
