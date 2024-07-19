@@ -1,0 +1,2 @@
+imprimir las boletas y facturas
+mostrar los registros

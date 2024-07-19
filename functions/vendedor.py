@@ -37,7 +37,9 @@ def sellerMenu(user,db):
         system("cls")   #cls previo a las opciones del menu
         match option:
             case 1: #buscar producto
-                lastSearch=searchProd(db)
+                intento=searchProd(db)
+                if intento!=None:
+                    lastSearch=intento
                 input("Presione enter para continuar... ")
                 pass
             case 2: #agregar producto

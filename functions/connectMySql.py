@@ -3,6 +3,7 @@ import tabulate as tab
 from os import system
 import time
 from datetime import date
+from pwinput import pwinput
 
 #ingresa de bdd
 class Database():
@@ -108,10 +109,10 @@ def modifyDay(db):
         #################dia abierto###################
         if estDia[1]=='abierto':
           est=input(f'El estado del dia esta {estDia[1]}\
-                \n¿Desea cambiarlo a Cerrado?(s/n) ')
+                \n¿Desea cambiarlo a Cerrado?(s/n) \n=> ')
           while est!='s' and est!='n':
             est=input('\nError, Opcion invalida\
-                      \n¿Desea cambiarlo a Cerrado?(s/n) ')
+                      \n¿Desea cambiarlo a Cerrado?(s/n) \n=> ')
           if est.lower()=='s':
             system("cls")
             try:
@@ -141,11 +142,11 @@ def modifyDay(db):
         ##################dia cerrado###################
         elif estDia[1]=='cerrado':
           est=input(f'El estado del dia esta {estDia[1]}\
-                \n¿Desea cambiarlo a Abierto?(s/n) ')
+                \n¿Desea cambiarlo a Abierto?(s/n) \n=>')
           system("cls")
           while est!='s' and est!='n':
             est=input('\nError, Opcion invalida\
-                      \n¿Desea cambiarlo a Abierto?(s/n) ')
+                      \n¿Desea cambiarlo a Abierto?(s/n) \n=>')
             system("cls")
           if est.lower()=='s':
             try:
@@ -238,6 +239,7 @@ def ProductManager(user,db):
       try:
         while True:
           try:
+            system("cls")
             idprod=int(input('Ingrese Codigo del producto: '))
             system("cls")
             break
@@ -246,18 +248,23 @@ def ProductManager(user,db):
         sq1=f'select codProd from producto where codProd={repr(idprod)}'
         db.cursor.execute(sq1)
         if db.cursor.fetchone()==None:
+          system("cls")
           nombProd=input('Ingrese Nombre del producto: ')
           system("cls")
           valorProd=0
           while True:
             try:
+              system("cls")
               valorProd=int(input('Ingrese valor unitario del producto: '))
+              system("cls")
               while(valorProd<=0):
+                system("cls")
                 valorProd=int(input('Ingrese valor unitario del producto valido(Mayor a 0): '))
               system("cls")
               break
             except ValueError:
               print("Error. Intente nuevamente usando digitos")
+          system("cls")
           rutJefe=input(f'Usted va a agregar el producto {nombProd}\
                         \nIngrese su Rut para confirmar (sin puntos y con guion)\n=> ')
           system("cls")
@@ -347,7 +354,7 @@ def ProductManager(user,db):
         print(err)
 
     elif opProd==5:
-      print('\nAbandonando Menu de productos...\n')
+      print('\nAbandonando Menu de productos\n')
       break
 
     else:
@@ -357,133 +364,227 @@ def ProductManager(user,db):
 
 def addUser(user,db):
   while True:
-        try:
-            system('cls')
-            print('+'*4,'Administracion de usuarios','+'*4)
-            opAdus=int(input('1. Ver usuarios vendedor\
-                             \n2. Agregar nuevo usuario vendedor\
-                             \n3. Modificar usuario vendedor\
-                             \n4. salir\
-                             \n=> '))
-        except Exception as err:
-            pass
-        if opAdus==1:
-            sq1='select rutVendedor,userName,nombre,apellidoPat,fono from vendedor'
+    while True:
+      system("cls")
+      print('+'*4,'Gestor de Usuarios','+'*4)
+      try:
+        resp=int(input('1. Ver Lista de Usuario\
+                      \n2. Agregar Usuario\
+                      \n3. Modificar Usuario\
+                      \n4. salir\
+                      \n=> '))
+        break
+      except Exception:
+        print('Ingrese una de las opciones validas')
+        pass
+    #Ver lista de Usuarios Vendedores
+    if resp==1:
+      system("cls")
+      sq1='select rutVendedor,userName,nombre,apellidoPat,fono from vendedor'
+      try:
+          db.cursor.execute(sq1)
+          verUs=db.cursor.fetchall()
+          print(tab.tabulate(verUs,headers=['Rut Vend.','Nombre de Us.','Nombre Vendedor','Apellido Vendedor','Fono vendedor'],tablefmt="psql"))
+      except Exception:
+          pass
+    #Agregar Usuarios Vendedores
+    elif resp==2:
+      system("cls")
+      rutUs=input('Ingrese Rut de nuevo usuario(sin puntos y con guion)\n=> ')
+      sq1=f'Select rutVendedor from Vendedor where rutVendedor={repr(rutUs)}'
+      try:
+        db.cursor.execute(sq1)
+        if db.cursor.fetchone()==None:
+          system("cls")
+          nomUsVend=input('Ingrese el nombre de usuario del vendedor: ')
+          system("cls")
+          passwordVend=input('Ingrese la contrasenha del usuario: ')
+          system("cls")
+          nomVend=input('Ingrese nombre del Vendedor: ')
+          system("cls")
+          apVend=input('Ingrese el primer apellido del vendedor: ')
+          while True:
             try:
-                db.cursor.execute(sq1)
-                verUs=db.cursor.fetchall()
-                print()
-                print(tab.tabulate(verUs,headers=['Rut Vend.','Nombre de Us.','Nombre Vendedor','Apellido Vendedor','Fono vendedor'],tablefmt="psql"))
-            except Exception as err:
-                print(err)
-        #Agregar Usuario Vendedor                
-        elif opAdus==2:
-            rutUs=input('Ingrese Rut de nuevo usuario(sin puntos y con guion)\n=> ')
-            sq1=f'Select rutVendedor from Vendedor where rutVendedor={repr(rutUs)}'
-            try:
-                db.cursor.execute(sq1)
-                if db.cursor.fetchone()==None:
-                    nomUsVend=input('Ingrese el nombre de usuario del vendedor: ')
-                    passwordVend=input('Ingrese la contrasenha del usuario: ')
-                    nomVend=input('Ingrese nombre del Vendedor: ')
-                    apVend=input('Ingrese el primer apellido del vendedor: ')
-                    fonoVend=int(input('Ingrese numero del vendedor: '))
-                    while fonoVend<=0:
-                      fonoVend=int(input('Ingrese numero del vendedor: '))
-            
-                    sq2=f'insert into vendedor values({repr(rutUs)},{repr(nomUsVend)},{repr(passwordVend)},{repr(nomVend)},{repr(apVend)},{repr(fonoVend)})'
-                    try:
-                        db.cursor.execute(sq2)
-                        db.conexion.commit()
-                    except Exception as err:
-                        db.conexion.rollback()
-                        print(err)
-                else:
-                    print('Usuario ya existente')
-            except Exception as err:
-                print(err)
-        #Modificar usuario
-        elif opAdus==3:
-            rutUs=input('Ingrese Rut de nuevo usuario(sin puntos y con guion)\n=> ')
-            sq1=f'Select * from Vendedor where rutVendedor={repr(rutUs)}'
-            try:
-                db.cursor.execute(sq1)
-                usVend=db.cursor.fetchone()
-                if usVend!=None:
-                    resp=int(input('1. cambiar Usuario\
-                                   \n2. cambiar contrasenha\
-                                   \n3. cambiar Nombre\
-                                   \n4. cambiar Apellido\
-                                   \n5. cambiar fono\
-                                   \n6. salir\
-                                   \n=> '))
-                    if resp==1:
-                        newUs=input(f'Ingrese nuevo nombre de usuario: {usVend[1]}=> ')
-                        sq2=f'update vendedor set userName={repr(newUs)} where rutVendedor={repr(rutUs)}'
-                        try:
-                            db.cursor.execute(sq2)
-                            db.conexion.commit()
-                        except Exception as err:
-                            db.conexion.rollback()
-                            print(err)
-                        print('\nUsuario modificado')
-                    elif resp==2:
-                        newpass=input(f'Ingrese nueva contrasenha => ')
-                        sq2=f'update vendedor set password1={repr(newpass)} where rutVendedor={repr(rutUs)}'
-                        try:
-                            db.cursor.execute(sq2)
-                            db.conexion.commit()
-                        except Exception as err:
-                            db.conexion.rollback()
-                            print(err)
-                        print('\nUsuario modificado')
-                    elif resp==3:
-                        newNom=input(f'Ingrese nuevo nombre: {usVend[3]}=> ')
-                        sq2=f'update vendedor set nombre={repr(newNom)} where rutVendedor={repr(rutUs)}'
-                        try:
-                            db.cursor.execute(sq2)
-                            db.conexion.commit()
-                        except Exception as err:
-                            db.conexion.rollback()
-                            print(err)
-                        print('\nUsuario modificado')
-                    elif resp==4:
-                        newAp=input(f'Ingrese nuevo apellido: {usVend[4]}=> ')
-                        sq2=f'update vendedor set apellidoPat={repr(newAp)} where rutVendedor={repr(rutUs)}'
-                        try:
-                            db.cursor.execute(sq2)
-                            db.conexion.commit()
-                        except Exception as err:
-                            db.conexion.rollback()
-                            print(err)
-                        print('Usuario modificado')
-                    elif resp==5:
-                        newFon=input(f'Ingrese nuevo fono: {usVend[5]}=> ')
-                        sq2=f'update vendedor set fono={repr(newFon)} where rutVendedor={repr(rutUs)}'
-                        try:
-                            db.cursor.execute(sq2)
-                            db.conexion.commit()
-                        except Exception as err:
-                            db.conexion.rollback()
-                            print(err)
-                        print('\nUsuario modificado')
-                    elif resp==6:
-                        print('saliendo del menu')
-                        pass
-                    else:
-                        print('\nOpcion incorrecta saliendo del menu...\n')
-                        pass
-                else:
-                    print('\nUsuario no existe\n')
-            except Exception as err:
-                print(err)
-        elif opAdus==4:
-            print('\nAbandonando Administracion de usuario...\n')
-            break
+              system("cls")
+              fonoVend=int(input('Ingrese numero del vendedor: '))
+              while fonoVend<=0 or len(fonoVend)!=9:
+                system("cls")
+                fonoVend=int(input('Error, Ingrese numero del vendedor(9 digitos): '))
+              break
+            except ValueError:
+              system("cls")
+              print("Intente con un numero de 9 digitos")
+              input("Presione Enter para continuar... ")
+          system("cls")
+          sq2=f'insert into vendedor values({repr(rutUs)},{repr(nomUsVend)},{repr(passwordVend)},{repr(nomVend)},{repr(apVend)},{repr(fonoVend)})'
+          try:
+            db.cursor.execute(sq2)
+            print("insert de vendedor exitoso")
+            db.conexion.commit()
+          except Exception:
+            db.conexion.rollback()
+            system("cls")
+            print("Los datos de usuario no se han ingresado correctamente ")
+          print('Nuevo Usuario creado exitosamente')
         else:
-            print('\nOpcion invalida\n')
-        input('\nPresione ENTER para continuar...')
-
+          print('Vendedor ya existe')    
+      except Exception:
+        pass
+    #Modificar Usuarios Vendedores
+    elif resp==3:
+      system("cls")
+      rutUs=input('Ingrese Rut del usuario a modificar(sin puntos y con guion)\n=> ')
+      sq1=f'Select * from Vendedor where rutVendedor={repr(rutUs)}'
+      try:
+        db.cursor.execute(sq1)
+        VendMod=db.cursor.fetchone()
+        if VendMod!=None:
+          while True:
+            system("cls")
+            print(f'Rut del Usuario a modificar => {rutUs}')
+            print('\nEscoja una opcion')
+            resp=int(input('1. cambiar Usuario\
+                          \n2. cambiar contrasenha\
+                          \n3. cambiar Nombre\
+                          \n4. cambiar Apellido\
+                          \n5. cambiar fono\
+                          \n6. salir\
+                          \n=> '))
+            #Cambiar nombre de usuario
+            if resp==1:
+              system("cls")
+              newUs=input(f'Ingrese nuevo nombre de usuario: {VendMod[1]} => ')
+              resp1=input(f'¿Esta seguro de cambiar el nombre de ususario?(s/n)\
+                          \n\n{VendMod[1]} => {newUs}')
+              while resp1.lower()!='s' and resp1!='n':
+                system("cls")
+                resp1=input(f'¿Esta seguro de cambiar el nombre de ususario?(s/n)\
+                          \n\n{VendMod[1]} => {newUs}')
+              if resp1.lower()=='s':
+                modUs=f'update vendedor set userName={repr(newUs)} where rutVendedor={repr(rutUs)}'
+                try:
+                  db.cursor.execute(modUs)
+                  db.conexion.commit()
+                except Exception:
+                  db.conexion.rollback()
+                  system("cls")
+                  print('Error al Modificar usuario')
+                  pass
+                system("cls")
+                print('Usuario modificado con exito')
+              else:
+                system("cls")
+                print('Usuario no modificado')
+            #Cambiar contraseña
+            elif resp==2:
+              system("cls")
+              newPass=pwinput(f'Ingrese nueva Contraseña: ')
+              resp1=input('¿Esta seguro de cambiar la contrasenha?(s/n) ')
+              while resp1.lower()!='s' and resp1!='n':
+                system("cls")
+                resp1=input('¿Esta seguro de cambiar la contrasenha?(s/n) ')
+              if resp1.lower()=='s':
+                modPass=f'update vendedor set password1={repr(newPass)} where rutVendedor={repr(rutUs)}'
+                try:
+                  db.cursor.execute(modPass)
+                  db.conexion.commit()
+                except Exception:
+                  db.conexion.rollback()
+                  print('Error al Modificar contrasenha')
+                  pass
+                system("cls")
+                print('Contrasenha modificada con exito')
+              else:
+                system("cls")
+                print('Contrasenha no modificada')              
+            elif resp==3:
+              system("cls")
+              newNom=input(f'Ingrese nuevo nombre de usuario: {VendMod[3]} => ')
+              resp1=input(f'¿Esta seguro de cambiar el nombre de vendedor?(s/n)\
+                          \n\n{VendMod[3]} => {newNom}')
+              while resp1.lower()!='s' and resp1!='n':
+                system("cls")
+                resp1=input(f'¿Esta seguro de cambiar el nombre de vendedor?(s/n)\
+                          \n\n{VendMod[3]} => {newNom}')
+              if resp1.lower()=='s':
+                modNom=f'update vendedor set nombre={repr(newNom)} where rutVendedor={repr(rutUs)}'
+                try:
+                  db.cursor.execute(modNom)
+                  db.conexion.commit()
+                except Exception:
+                  db.conexion.rollback()
+                  print('Error al Modificar el nombre del vendedor')
+                  pass
+                system("cls")
+                print('Nombre del vendedor modificado con exito')
+              else:
+                system("cls")
+                print('Nombre de vendedor no modificado')
+            elif resp==4:
+              system("cls")
+              newApe=input(f'Ingrese nuevo Apellido del Vendedor: {VendMod[4]} => ')
+              resp1=input(f'¿Esta seguro de cambiar el Apellido del Vendedor?(s/n)\
+                          \n\n{VendMod[4]} => {newApe}')
+              while resp1.lower()!='s' and resp1!='n':
+                system("cls")
+                resp1=input(f'¿Esta seguro de cambiar el Apellido del Vendedor?(s/n)\
+                          \n\n{VendMod[4]} => {newApe}')
+              if resp1.lower()=='s':
+                modAp=f'update vendedor set apellidoPat={repr(newApe)} where rutVendedor={repr(rutUs)}'
+                try:
+                  db.cursor.execute(modAp)
+                  db.conexion.commit()
+                except Exception:
+                  db.conexion.rollback()
+                  print('Error al Modificar el Apellido del Vendedor')
+                  pass
+                print('Apellido del Vendedor modificado con exito')
+              else:
+                print('Apellido del Vendedor no modificado')
+            elif resp==5:
+              system("cls")
+              newFono=input(f'Ingrese nuevo Fono: {VendMod[5]} => ')
+              resp1=input(f'¿Esta seguro de cambiar el Fono?(s/n)\
+                          \n\n{VendMod[5]} => {newFono}')
+              while resp1.lower()!='s' and resp1.lower()!='n':
+                system("cls")
+                resp1=input(f'¿Esta seguro de cambiar el Fono?(s/n)\
+                          \n\n{VendMod[5]} => {newFono}\n => ')
+              if resp1.lower()=='s':
+                modFono=f'update vendedor set fono={repr(newFono)} where rutVendedor={repr(rutUs)}'
+                try:
+                  db.cursor.execute(modFono)
+                  db.conexion.commit()
+                except Exception:
+                  db.conexion.rollback()
+                  print('Error al Modificar el Fono')
+                  pass
+                system("cls")
+                print('Fono modificado con exito')
+              else:
+                system("cls")
+                print('Fono no modificado')
+            elif resp==6:
+              system("cls")
+              print('\nVolviendo a Gestor de Usuarios\n')
+              break
+            else:
+              system("cls")
+              print('\nOpcion Invalida\n')
+            input('\nPresione ENTER para continuar...')
+        else:
+          print("EL rut ingresado no concuerda con ninguno resgistrado. ")
+      except Exception:
+        print("Ha ocurrido un error, intentelo nuevamente")
+    elif resp==4:
+      system("cls")
+      print('\nAbandonando Gestor de Usuarios\n')
+      break
+    else:
+      system("cls")
+      print('\nOpcion Invalida...\n')
+      
+    input('\nPresione ENTER para continuar...')
 
 ###Seller menu functions###
 #Buscar producto
@@ -511,14 +612,23 @@ def searchProd(db):
     db.conexion.rollback()
     print(err)
   #retorno
-  print("Producto Encontrado")
-  print(tab.tabulate(result,headers=["Codigo Producto","Nombre del Producto","Valor del unitario del Producto"],tablefmt="psql")) #TODO formatear el resultado
-  return(result)
+  # print(result)
+  # print(type(result))
+  # # print(result[0])
+  # print(type(result[0]))
+  # print(type(None))
+  if len(result)>=1:
+    print("Producto Encontrado")
+    print(tab.tabulate(result,headers=["Codigo Producto","Nombre del Producto","Valor del unitario del Producto"],tablefmt="psql"))
+    return(result)
+  else:
+    print("No se ha encontrado el producto")
+    return(None)
 
 #Agregar producto
 def addProduct(producto,productList): 
   #revisa si se ha buscado un producto
-  if(producto[0]==None or len(producto[0])<1):
+  if(producto==None or len(producto)<1):
     print("Debe haber buscado un producto valido")
     return productList
   #si hay un producto
@@ -599,6 +709,9 @@ def generateSell(user,productList,total,db):
   numBoleta=1
   numFactura=1
   numVenta=1
+  if(len(productList)<1):
+    print("Debe haber agregado por lo menos un producto a la lista de compra ")
+    return()
   #ciclo para preguntar por modificaciones
   while True:
     #elegir documento
